@@ -1,11 +1,12 @@
-import React, { useRef, useState } from 'react';
 import 'semantic-ui-css/semantic.min.css';
+import React, { useRef, useState } from 'react';
 import { Container, Button, Form, Header, Table, Divider } from 'semantic-ui-react';
+import AreaChart from './Chart';
 
 const serbianLocale = new Intl.NumberFormat('RS');
 const formatNumber = (number) => serbianLocale.format(Math.round(number));
 
-const ResultsTable = ({ calculatedInvestments }) => {
+const ResultsTable = React.memo(({ calculatedInvestments }) => {
   const currentYear = (new Date()).getFullYear();
   return (
     <Table striped>
@@ -14,7 +15,7 @@ const ResultsTable = ({ calculatedInvestments }) => {
           <Table.HeaderCell>Year</Table.HeaderCell>
           <Table.HeaderCell>Initial sum</Table.HeaderCell>
           <Table.HeaderCell>Monthly investments sum</Table.HeaderCell>
-          <Table.HeaderCell>Total amount</Table.HeaderCell>
+          <Table.HeaderCell>Total</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
   
@@ -30,13 +31,13 @@ const ResultsTable = ({ calculatedInvestments }) => {
       </Table.Body>
     </Table>
   );
-}
+});
 
 const calculateInvestments = ({initialSum, investmentPerMonth, growthRatePerMonth}) => {
   const resultArr = [];
   const growthFactorPerMonth = growthRatePerMonth / 100 + 1;
 
-  for (let year = 1; year <= 40; year++) {
+  for (let year = 1; year <= 10; year++) {
     const previousInitialSum = year > 1 ? resultArr[year - 2].initialSum : initialSum;
     const previousMonthlyInvestmentsSum = year > 1 ? resultArr[year - 2].monthlyInvestmentsSum : 0;
     const currentYearResults = resultArr[year - 1] = {
@@ -109,7 +110,12 @@ const App = () => {
       {calculatedInvestments && (
         <>
           <Divider />
-          <ResultsTable calculatedInvestments={calculatedInvestments} />
+          <AreaChart
+            calculatedInvestments={calculatedInvestments}
+          />
+          <ResultsTable
+            calculatedInvestments={calculatedInvestments}
+          />
         </>
       )}
     </Container>
