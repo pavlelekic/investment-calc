@@ -54,14 +54,15 @@ function App() {
   const [calculatedInvestments, setCalculatedInvestments] = useState(null);
   const initialSumInput = useRef();
   const investmentPerMonthInput = useRef();
-  const growthRatePerMonthInput = useRef();
+  const growthRatePerYearInput = useRef();
 
   return (
     <Container>
       <Header as='h1'>The Investment Calc</Header>
       <Form onSubmit={() => {
         const investmentPerMonth = parseFloat(investmentPerMonthInput.current.value);
-        const growthRatePerMonth = parseFloat(growthRatePerMonthInput.current.value);
+        const growthRatePerYear = parseFloat(growthRatePerYearInput.current.value);
+        const growthRatePerMonth = Math.pow((growthRatePerYear / 100 + 1), 1 / 12);
         const initialSum = parseFloat(initialSumInput.current.value);
 
         if (investmentPerMonth >= 0 && growthRatePerMonth > 0) {
@@ -81,10 +82,10 @@ function App() {
           <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" />
         </Form.Field>
         <Form.Field>
-          <label>Growth rate in % per month</label>
+          <label>Growth rate per year</label>
           <input
-            placeholder='1'
-            ref={growthRatePerMonthInput}
+            placeholder='10'
+            ref={growthRatePerYearInput}
             label={{ basic: true, content: '%' }}
             labelPosition='right'
             type="number" step="0.01" min="0" max="100"
