@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Container, Button, Form, Header, Table, Divider } from 'semantic-ui-react';
 
+const serbianLocale = new Intl.NumberFormat('RS');
+const formatNumber = (number) => serbianLocale.format(Math.round(number));
+
 const ResultsTable = ({ calculatedInvestments }) => {
   const currentYear = (new Date()).getFullYear();
   return (
@@ -19,9 +22,9 @@ const ResultsTable = ({ calculatedInvestments }) => {
         {calculatedInvestments.map(({ initialSum, monthlyInvestmentsSum }, index) => (
           <Table.Row>
             <Table.Cell>{`${index + 1} (${currentYear + index + 1})`}</Table.Cell>
-            <Table.Cell>{(initialSum).toFixed(1)}</Table.Cell>
-            <Table.Cell>{(monthlyInvestmentsSum).toFixed(1)}</Table.Cell>
-            <Table.Cell>{(initialSum + monthlyInvestmentsSum).toFixed(1)}</Table.Cell>
+            <Table.Cell>{formatNumber(initialSum)}</Table.Cell>
+            <Table.Cell>{formatNumber(monthlyInvestmentsSum)}</Table.Cell>
+            <Table.Cell>{formatNumber(initialSum + monthlyInvestmentsSum)}</Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
@@ -50,14 +53,14 @@ const calculateInvestments = ({initialSum, investmentPerMonth, growthRatePerMont
   return resultArr;
 }
 
-function App() {
+const App = () => {
   const [calculatedInvestments, setCalculatedInvestments] = useState(null);
   const initialSumInput = useRef();
   const investmentPerMonthInput = useRef();
   const growthRatePerYearInput = useRef();
 
   return (
-    <Container style={{ margin: '10vh auto'}}>
+    <Container style={{ padding: '10vh 0'}}>
       <Header as='h1'>The Investment Calc</Header>
       <Form onSubmit={() => {
         const investmentPerMonth = parseFloat(investmentPerMonthInput.current.value);
@@ -75,12 +78,12 @@ function App() {
       }}>
         <Form.Group widths='equal'>
           <Form.Field>
-            <label>Initial (starting) sum</label>
-            <input placeholder='50,000' ref={initialSumInput} type="number" min="0" />
+            <label>Starting sum</label>
+            <input placeholder='50,000' ref={initialSumInput} type="number" min="0" defaultValue={120000}/>
           </Form.Field>
           <Form.Field>
-            <label>Amount of investment per month</label>
-            <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" />
+            <label>Monthly investments</label>
+            <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" defaultValue={1500}/>
           </Form.Field>
           <Form.Field>
             <label>Growth rate per year</label>
@@ -90,6 +93,7 @@ function App() {
               label={{ basic: true, content: '%' }}
               labelPosition='right'
               type="number" step="0.01" min="0" max="100"
+              defaultValue={10}
             />
           </Form.Field>
           <Form.Field style={{
@@ -110,6 +114,6 @@ function App() {
       )}
     </Container>
   );
-}
+};
 
 export default App;
