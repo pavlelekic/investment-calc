@@ -57,7 +57,7 @@ function App() {
   const growthRatePerYearInput = useRef();
 
   return (
-    <Container>
+    <Container style={{ margin: '10vh auto'}}>
       <Header as='h1'>The Investment Calc</Header>
       <Form onSubmit={() => {
         const investmentPerMonth = parseFloat(investmentPerMonthInput.current.value);
@@ -73,25 +73,34 @@ function App() {
           alert('Interest per year and investment per month need to be > 0');
         }
       }}>
-        <Form.Field>
-          <label>Initial (starting) sum</label>
-          <input placeholder='50,000' ref={initialSumInput} type="number" min="0" />
-        </Form.Field>
-        <Form.Field>
-          <label>Amount of investment per month</label>
-          <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" />
-        </Form.Field>
-        <Form.Field>
-          <label>Growth rate per year</label>
-          <input
-            placeholder='10'
-            ref={growthRatePerYearInput}
-            label={{ basic: true, content: '%' }}
-            labelPosition='right'
-            type="number" step="0.01" min="0" max="100"
-          />
-        </Form.Field>
-        <Button type='submit'>Calculate</Button>
+        <Form.Group widths='equal'>
+          <Form.Field>
+            <label>Initial (starting) sum</label>
+            <input placeholder='50,000' ref={initialSumInput} type="number" min="0" />
+          </Form.Field>
+          <Form.Field>
+            <label>Amount of investment per month</label>
+            <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" />
+          </Form.Field>
+          <Form.Field>
+            <label>Growth rate per year</label>
+            <input
+              placeholder='10'
+              ref={growthRatePerYearInput}
+              label={{ basic: true, content: '%' }}
+              labelPosition='right'
+              type="number" step="0.01" min="0" max="100"
+            />
+          </Form.Field>
+          <Form.Field style={{
+            flex: 0,
+            flexDirection: 'column',
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}>
+            <Button type="submit">Calculate</Button>
+          </Form.Field>
+        </Form.Group>
       </Form>
       {calculatedInvestments && (
         <>
