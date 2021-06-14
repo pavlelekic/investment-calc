@@ -35,7 +35,7 @@ const ResultsTable = React.memo(({ calculatedInvestments }) => {
 
 const calculateInvestments = ({initialSum, investmentPerMonth, growthRatePerMonth}) => {
   const resultArr = [];
-  const growthFactorPerMonth = growthRatePerMonth / 100 + 1;
+  const growthFactorPerMonth = growthRatePerMonth;
 
   for (let year = 1; year <= 10; year++) {
     const previousInitialSum = year > 1 ? resultArr[year - 2].initialSum : initialSum;
