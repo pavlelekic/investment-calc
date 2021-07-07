@@ -1,7 +1,7 @@
 import React from "react";
 import { Chart } from "react-charts";
 import AspectRatio from "./AspectRatio";
-import './Chart.css';
+import './AreaChart.css';
 
 const series = {
   type: "area"

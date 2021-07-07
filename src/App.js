@@ -1,7 +1,7 @@
 import 'semantic-ui-css/semantic.min.css';
 import React, { useRef, useState } from 'react';
 import { Container, Button, Form, Header, Table, Divider } from 'semantic-ui-react';
-import AreaChart from './Chart';
+import AreaChart from './AreaChart';
 
 const serbianLocale = new Intl.NumberFormat('RS');
 const formatNumber = (number) => serbianLocale.format(Math.round(number));
