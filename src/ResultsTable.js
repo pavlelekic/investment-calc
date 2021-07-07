@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Icon } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
 
 const serbianLocale = new Intl.NumberFormat('RS');
 const formatNumber = (number) => serbianLocale.format(Math.round(number));

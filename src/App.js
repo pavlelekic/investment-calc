@@ -36,6 +36,10 @@ const LabelWithTooltip = ({ label, tooltipText }) => (
   </label>
 );
 
+const ClearFix = ({ style }) => (
+  <div style={{ clear: 'both', display: 'table', ...style }} />
+);
+
 const App = () => {
   const [calculatedInvestments, setCalculatedInvestments] = useState(null);
   const initialSumInput = useRef();
@@ -44,7 +48,11 @@ const App = () => {
 
   return (
     <Container style={{ padding: '10vh 0'}}>
-      <Header as='h1'>The Investment Calc</Header>
+      <Header floated="left" as='h1'>The Investment Calc</Header>
+      <Button floated='right' icon circular>
+        <Icon name='setting' />
+      </Button>
+      <ClearFix  style={{ marginBottom: SPACE.lg }}/>
       <Form onSubmit={() => {
         const investmentPerMonth = parseFloat(investmentPerMonthInput.current.value);
         const growthRatePerYear = parseFloat(growthRatePerYearInput.current.value);
