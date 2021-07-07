@@ -19,7 +19,7 @@ const ResultsTable = React.memo(({ calculatedInvestments }) => {
   
       <Table.Body>
         {calculatedInvestments.map(({ initialSum, monthlyInvestmentsSum }, index) => (
-          <Table.Row>
+          <Table.Row key={index}>
             <Table.Cell>{`${index + 1} (${currentYear + index + 1})`}</Table.Cell>
             <Table.Cell>{formatNumber(initialSum)}</Table.Cell>
             <Table.Cell>{formatNumber(monthlyInvestmentsSum)}</Table.Cell>
