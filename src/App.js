@@ -1,37 +1,9 @@
 import 'semantic-ui-css/semantic.min.css';
 import React, { useRef, useState } from 'react';
-import { Container, Button, Form, Header, Table, Divider } from 'semantic-ui-react';
+import { Container, Button, Form, Header, Divider, Icon, Popup } from 'semantic-ui-react';
+import ResultsTable from './ResultsTable';
 import AreaChart from './AreaChart';
-
-const serbianLocale = new Intl.NumberFormat('RS');
-const formatNumber = (number) => serbianLocale.format(Math.round(number));
-
-const ResultsTable = React.memo(({ calculatedInvestments }) => {
-  const currentYear = (new Date()).getFullYear();
-  return (
-    <Table striped>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Year</Table.HeaderCell>
-          <Table.HeaderCell>Initial sum</Table.HeaderCell>
-          <Table.HeaderCell>Monthly investments sum</Table.HeaderCell>
-          <Table.HeaderCell>Total</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-  
-      <Table.Body>
-        {calculatedInvestments.map(({ initialSum, monthlyInvestmentsSum }, index) => (
-          <Table.Row>
-            <Table.Cell>{`${index + 1} (${currentYear + index + 1})`}</Table.Cell>
-            <Table.Cell>{formatNumber(initialSum)}</Table.Cell>
-            <Table.Cell>{formatNumber(monthlyInvestmentsSum)}</Table.Cell>
-            <Table.Cell>{formatNumber(initialSum + monthlyInvestmentsSum)}</Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
-  );
-});
+import { SPACE } from './constants';
 
 const calculateInvestments = ({initialSum, investmentPerMonth, growthRatePerMonth}) => {
   const resultArr = [];
@@ -53,6 +25,16 @@ const calculateInvestments = ({initialSum, investmentPerMonth, growthRatePerMont
 
   return resultArr;
 }
+
+const LabelWithTooltip = ({ label, tooltipText }) => (
+  <label>
+    {label}
+    <Popup
+      content={tooltipText}
+      trigger={<Icon disabled name='info circle' style={{ marginLeft: SPACE.xs }} />}
+    />
+  </label>
+);
 
 const App = () => {
   const [calculatedInvestments, setCalculatedInvestments] = useState(null);
@@ -79,15 +61,25 @@ const App = () => {
       }}>
         <Form.Group widths='equal'>
           <Form.Field>
-            <label>Starting sum</label>
+            <LabelWithTooltip
+              label="Starting sum"
+              tooltipText="Do you have some savings? Are you starting from 0?"
+            />
             <input placeholder='50,000' ref={initialSumInput} type="number" min="0" defaultValue={120000}/>
           </Form.Field>
           <Form.Field>
-            <label>Monthly investments</label>
+            <LabelWithTooltip
+              label="Monthly investments"
+              tooltipText="How much money can you set aside each month for investing?"
+            />
             <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" defaultValue={1500}/>
           </Form.Field>
           <Form.Field>
-            <label>Growth rate per year</label>
+            <LabelWithTooltip
+              label="Growth rate per year"
+              tooltipText="For example S&P 500 grows at an average of 12% per year"
+            />
+            <label></label>
             <input
               placeholder='10'
               ref={growthRatePerYearInput}
