@@ -1,6 +1,6 @@
 import 'semantic-ui-css/semantic.min.css';
 import React, { useRef, useState } from 'react';
-import { Container, Button, Form, Header, Divider, Icon, Popup } from 'semantic-ui-react';
+import { Container, Button, Form, Header, Divider, Icon, Popup, Input } from 'semantic-ui-react';
 import ResultsTable from './ResultsTable';
 import AreaChart from './AreaChart';
 import { SPACE } from './constants';
@@ -41,10 +41,15 @@ const ClearFix = ({ style }) => (
 );
 
 const App = () => {
-  const [calculatedInvestments, setCalculatedInvestments] = useState(null);
-  const initialSumInput = useRef();
-  const investmentPerMonthInput = useRef();
-  const growthRatePerYearInput = useRef();
+  const [investmentPerMonth, setInvestmentPerMonth] = React.useState(undefined);
+  const [growthRatePerYear, setGrowthRatePerYear] = React.useState(undefined);
+  const [initialSum, setInitialSum] = React.useState(undefined);
+  const growthRatePerMonth = Math.pow((growthRatePerYear / 100 + 1), 1 / 12);
+
+  let calculatedInvestments = null;
+  if (investmentPerMonth >= 0 && growthRatePerMonth >= 0 && initialSum >= 0) {
+    calculatedInvestments = calculateInvestments({ initialSum, investmentPerMonth, growthRatePerMonth });
+  }
 
   return (
     <Container style={{ padding: '10vh 0'}}>
@@ -53,69 +58,53 @@ const App = () => {
         <Icon name='setting' />
       </Button>
       <ClearFix  style={{ marginBottom: SPACE.lg }}/>
-      <Form onSubmit={() => {
-        const investmentPerMonth = parseFloat(investmentPerMonthInput.current.value);
-        const growthRatePerYear = parseFloat(growthRatePerYearInput.current.value);
-        const growthRatePerMonth = Math.pow((growthRatePerYear / 100 + 1), 1 / 12);
-        const initialSum = parseFloat(initialSumInput.current.value);
-
-        if (investmentPerMonth >= 0 && growthRatePerMonth > 0) {
-          const result = calculateInvestments({initialSum, investmentPerMonth, growthRatePerMonth});
-          setCalculatedInvestments(result);
-        }
-        else {
-          alert('Interest per year and investment per month need to be > 0');
-        }
-      }}>
+      <Form>
         <Form.Group widths='equal'>
           <Form.Field>
             <LabelWithTooltip
               label="Starting sum"
               tooltipText="Do you have some savings? Are you starting from 0?"
             />
-            <input placeholder='50,000' ref={initialSumInput} type="number" min="0" defaultValue={120000}/>
+            <Input
+              placeholder='50,000'
+              onChange={(e) => setInitialSum(parseFloat(e.target.value))}
+              type="number"
+              min="0"
+              defaultValue={0}
+            />
           </Form.Field>
           <Form.Field>
             <LabelWithTooltip
               label="Monthly investments"
               tooltipText="How much money can you set aside each month for investing?"
             />
-            <input placeholder='1000' ref={investmentPerMonthInput} type="number" min="0" defaultValue={1500}/>
+            <Input
+              placeholder='1000'
+              type="number"
+              min="0"
+              onChange={(e) => setInvestmentPerMonth(parseFloat(e.target.value))}
+            />
           </Form.Field>
           <Form.Field>
             <LabelWithTooltip
               label="Growth rate per year"
-              tooltipText="For example S&P 500 grows at an average of 12% per year"
+              tooltipText="For example S&P 500 average return is of around 10% since its inception through 2019"
             />
-            <label></label>
-            <input
+            <Input
               placeholder='10'
-              ref={growthRatePerYearInput}
               label={{ basic: true, content: '%' }}
               labelPosition='right'
               type="number" step="0.01" min="0" max="100"
-              defaultValue={10}
+              onChange={(e) => setGrowthRatePerYear(parseFloat(e.target.value))}
             />
-          </Form.Field>
-          <Form.Field style={{
-            flex: 0,
-            flexDirection: 'column',
-            display: 'flex',
-            justifyContent: 'flex-end',
-          }}>
-            <Button type="submit">Calculate</Button>
           </Form.Field>
         </Form.Group>
       </Form>
       {calculatedInvestments && (
         <>
           <Divider />
-          <AreaChart
-            calculatedInvestments={calculatedInvestments}
-          />
-          <ResultsTable
-            calculatedInvestments={calculatedInvestments}
-          />
+          <AreaChart calculatedInvestments={calculatedInvestments} />
+          <ResultsTable calculatedInvestments={calculatedInvestments} />
         </>
       )}
     </Container>
