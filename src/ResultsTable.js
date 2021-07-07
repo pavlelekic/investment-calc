@@ -11,7 +11,7 @@ const ResultsTable = React.memo(({ calculatedInvestments }) => {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Year</Table.HeaderCell>
-          <Table.HeaderCell>Initial sum<Icon disabled name='users' /></Table.HeaderCell>
+          <Table.HeaderCell>Initial sum</Table.HeaderCell>
           <Table.HeaderCell>Monthly investments sum</Table.HeaderCell>
           <Table.HeaderCell>Total</Table.HeaderCell>
         </Table.Row>
