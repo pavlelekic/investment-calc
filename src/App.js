@@ -43,7 +43,7 @@ const ClearFix = ({ style }) => (
 const App = () => {
   const [investmentPerMonth, setInvestmentPerMonth] = useState(undefined);
   const [growthRatePerYear, setGrowthRatePerYear] = useState(undefined);
-  const [initialSum, setInitialSum] = useState(undefined);
+  const [initialSum, setInitialSum] = useState(0);
   const growthRatePerMonth = Math.pow((growthRatePerYear / 100 + 1), 1 / 12);
 
   let calculatedInvestments = null;
@@ -58,7 +58,7 @@ const App = () => {
         <Icon name='setting' />
       </Button>
       <ClearFix  style={{ marginBottom: SPACE.lg }}/>
-      <Form>
+      <Form style={{ marginBottom: SPACE.xl }}>
         <Form.Group widths='equal'>
           <Form.Field>
             <LabelWithTooltip
@@ -71,7 +71,7 @@ const App = () => {
               type="number"
               min="0"
               step="10"
-              defaultValue={0}
+              defaultValue={initialSum}
             />
           </Form.Field>
           <Form.Field>
@@ -102,7 +102,6 @@ const App = () => {
           </Form.Field>
         </Form.Group>
       </Form>
-      <Divider />
       {calculatedInvestments ? (
         <>
           <AreaChart calculatedInvestments={calculatedInvestments} />
