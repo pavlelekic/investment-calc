@@ -1,6 +1,6 @@
 import 'semantic-ui-css/semantic.min.css';
-import React, { useRef, useState } from 'react';
-import { Container, Button, Form, Header, Divider, Icon, Popup, Input } from 'semantic-ui-react';
+import React, { useState } from 'react';
+import { Container, Button, Form, Header, Divider, Icon, Popup, Input, Message } from 'semantic-ui-react';
 import ResultsTable from './ResultsTable';
 import AreaChart from './AreaChart';
 import { SPACE } from './constants';
@@ -41,9 +41,9 @@ const ClearFix = ({ style }) => (
 );
 
 const App = () => {
-  const [investmentPerMonth, setInvestmentPerMonth] = React.useState(undefined);
-  const [growthRatePerYear, setGrowthRatePerYear] = React.useState(undefined);
-  const [initialSum, setInitialSum] = React.useState(undefined);
+  const [investmentPerMonth, setInvestmentPerMonth] = useState(undefined);
+  const [growthRatePerYear, setGrowthRatePerYear] = useState(undefined);
+  const [initialSum, setInitialSum] = useState(undefined);
   const growthRatePerMonth = Math.pow((growthRatePerYear / 100 + 1), 1 / 12);
 
   let calculatedInvestments = null;
@@ -70,6 +70,7 @@ const App = () => {
               onChange={(e) => setInitialSum(parseFloat(e.target.value))}
               type="number"
               min="0"
+              step="10"
               defaultValue={0}
             />
           </Form.Field>
@@ -82,6 +83,7 @@ const App = () => {
               placeholder='1000'
               type="number"
               min="0"
+              step="10"
               onChange={(e) => setInvestmentPerMonth(parseFloat(e.target.value))}
             />
           </Form.Field>
@@ -94,18 +96,23 @@ const App = () => {
               placeholder='10'
               label={{ basic: true, content: '%' }}
               labelPosition='right'
-              type="number" step="0.01" min="0" max="100"
+              type="number" step="0.2" min="0" max="100"
               onChange={(e) => setGrowthRatePerYear(parseFloat(e.target.value))}
             />
           </Form.Field>
         </Form.Group>
       </Form>
-      {calculatedInvestments && (
+      <Divider />
+      {calculatedInvestments ? (
         <>
-          <Divider />
           <AreaChart calculatedInvestments={calculatedInvestments} />
           <ResultsTable calculatedInvestments={calculatedInvestments} />
         </>
+      ) : (
+        <Message info>
+          <Message.Header>How to use this?</Message.Header>
+          <p>You just need to enter a value for starting sum, monthly investments and growth per year and the results will show up in chart and also in a table below it.</p>
+        </Message>
       )}
     </Container>
   );
