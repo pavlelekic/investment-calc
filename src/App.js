@@ -1,16 +1,17 @@
 import 'semantic-ui-css/semantic.min.css';
 import React, { useState } from 'react';
-import { Container, Button, Form, Header, Divider, Icon, Popup, Input, Message } from 'semantic-ui-react';
+import { Container, Button, Form, Header, Icon, Popup, Input, Message, Modal } from 'semantic-ui-react';
 import ResultsTable from './ResultsTable';
 import AreaChart from './AreaChart';
 import { SPACE } from './constants';
 
-const calculateInvestments = ({initialSum, investmentPerMonth, growthRatePerMonth}) => {
+const calculateInvestments = ({ initialSum, investmentPerMonth, growthRatePerMonth }) => {
   const resultArr = [];
   const growthFactorPerMonth = growthRatePerMonth;
+  const fixForChart = 0.000000001; // not going to render chart without this
 
   for (let year = 1; year <= 10; year++) {
-    const previousInitialSum = year > 1 ? resultArr[year - 2].initialSum : initialSum;
+    const previousInitialSum = year > 1 ? resultArr[year - 2].initialSum : initialSum + fixForChart;
     const previousMonthlyInvestmentsSum = year > 1 ? resultArr[year - 2].monthlyInvestmentsSum : 0;
     const currentYearResults = resultArr[year - 1] = {
       initialSum: previousInitialSum,
@@ -40,6 +41,36 @@ const ClearFix = ({ style }) => (
   <div style={{ clear: 'both', display: 'table', ...style }} />
 );
 
+const SettingsModal = () => {
+  // const [isOpen, setIsOpen] = useState(false);
+  return (
+    <Modal
+      dimmer="blurring"
+      size="small"
+      trigger={(
+        <Button floated='right' icon circular>
+          <Icon name='setting' />
+        </Button>
+      )}
+      // onClose={() => dispatch({ type: 'CLOSE_MODAL' })}
+    >
+      <Modal.Header>Use Google's location service?</Modal.Header>
+      <Modal.Content>
+        Let Google help apps determine location. This means sending anonymous
+        location data to Google, even when no apps are running.
+      </Modal.Content>
+      <Modal.Actions>
+        <Button negative onClick={() => ({ type: 'CLOSE_MODAL' })}>
+          Disagree
+        </Button>
+        <Button positive onClick={() => ({ type: 'CLOSE_MODAL' })}>
+          Agree
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
+};
+
 const App = () => {
   const [investmentPerMonth, setInvestmentPerMonth] = useState(undefined);
   const [growthRatePerYear, setGrowthRatePerYear] = useState(undefined);
@@ -54,9 +85,7 @@ const App = () => {
   return (
     <Container style={{ padding: '10vh 0'}}>
       <Header floated="left" as='h1'>The Investment Calc</Header>
-      <Button floated='right' icon circular>
-        <Icon name='setting' />
-      </Button>
+      <SettingsModal />
       <ClearFix  style={{ marginBottom: SPACE.lg }}/>
       <Form style={{ marginBottom: SPACE.xl }}>
         <Form.Group widths='equal'>
