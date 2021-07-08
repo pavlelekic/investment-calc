@@ -1,6 +1,6 @@
 import 'semantic-ui-css/semantic.min.css';
 import React, { useState } from 'react';
-import { Container, Button, Form, Header, Icon, Popup, Input, Message, Modal } from 'semantic-ui-react';
+import { Container, Button, Form, Header, Icon, Popup, Input, Message, Modal, Dropdown, Checkbox } from 'semantic-ui-react';
 import ResultsTable from './ResultsTable';
 import AreaChart from './AreaChart';
 import { SPACE } from './constants';
@@ -54,10 +54,36 @@ const SettingsModal = () => {
       )}
       // onClose={() => dispatch({ type: 'CLOSE_MODAL' })}
     >
-      <Modal.Header>Use Google's location service?</Modal.Header>
+      {/* <Modal.Header>Use Google's location service?</Modal.Header> */}
       <Modal.Content>
-        Let Google help apps determine location. This means sending anonymous
-        location data to Google, even when no apps are running.
+        <Form>
+          <Form.Field>
+            <label>Currency</label>
+            <input placeholder='$' />
+          </Form.Field>
+          <Form.Field>
+            <label>Currency placement</label>
+            <Dropdown
+              placeholder='State'
+              options={[{
+                key: 1,
+                text: 'Left',
+                value: 'left',
+              }, {
+                key: 2,
+                text: 'Right',
+                value: 'right',
+              }]}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Last Name</label>
+            <input placeholder='Last Name' />
+          </Form.Field>
+          <Form.Field>
+            <Checkbox label='I agree to the Terms and Conditions' />
+          </Form.Field>
+        </Form>
       </Modal.Content>
       <Modal.Actions>
         <Button negative onClick={() => ({ type: 'CLOSE_MODAL' })}>
